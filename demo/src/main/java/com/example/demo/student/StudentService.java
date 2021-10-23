@@ -7,10 +7,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class StudentService {
@@ -44,7 +41,7 @@ public class StudentService {
     }
 
     @Transactional
-    public void updateStudent(Long studentId, String name, String email) {
+    public void updateStudent(Long studentId, String name, String email, String dob) {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new IllegalStateException("student with id " + studentId + "does not exist"));
         if (name != null && name.length() > 0 && !Objects.equals(student.getName(), name)) {
@@ -57,6 +54,10 @@ public class StudentService {
                 throw new IllegalStateException("email taken");
             }
             student.setEmail(email);
+        }
+
+        if (dob != null && dob.length() > 0) {
+            student.setDob(LocalDate.parse(dob));
         }
     }
 }
